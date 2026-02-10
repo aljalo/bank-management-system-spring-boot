@@ -1,10 +1,13 @@
 package org.wscict.bank.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.wscict.bank.dto.AccountResponse;
+import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.model.Account;
 import org.wscict.bank.service.AccountService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/accounts")
@@ -16,19 +19,35 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping
-    public Account createAccount(@RequestParam String ownerName,
-                                 @RequestParam double balance) {
-        return accountService.createAccount(ownerName, balance);
-    }
+   @PostMapping
+    public AccountResponse createAccount(@RequestBody CreateAccountRequest request){
+        Account account = accountService.createAccount(
+                request.getOwnerName(),
+                request.getBalance()
+        );
+        return mapToResponse(account);
+   }
 
-    @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable Long id) {
-        return accountService.getAccountById(id);
-    }
+   @GetMapping("/{id}")
+   public AccountResponse getAccountById(@PathVariable Long id){
+        Account account = accountService.getAccountById(id);
+        return mapToResponse(account);
+   }
+   @GetMapping
+   public List<AccountResponse> getAllAccounts(){
+        return accountService.getAllAccounts()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+   }
 
-    @GetMapping
-    public List<Account> getAccounts() {
-        return accountService.getAllAccounts();
-    }
+   //
+   private AccountResponse mapToResponse(Account account){
+        return new AccountResponse(
+                account.getId(),
+                account.getOwnerName(),
+                account.getBalance(),
+                account.getStatus()
+        );
+   }
 }
