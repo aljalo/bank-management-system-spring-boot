@@ -1,6 +1,7 @@
 package org.wscict.bank.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.wscict.bank.exception.AccountNotFoundException;
 import org.wscict.bank.model.Account;
 import org.wscict.bank.repository.AccountRepository;
 import org.wscict.bank.service.AccountService;
@@ -25,7 +26,8 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public Account getAccountById(Long id){
-        return accountRepository.findById(id).orElse(null);
+
+        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
     }
     @Override
     public List<Account> getAllAccounts(){
