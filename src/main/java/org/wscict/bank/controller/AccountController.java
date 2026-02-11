@@ -1,5 +1,6 @@
 package org.wscict.bank.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
@@ -20,7 +21,7 @@ public class AccountController {
     }
 
    @PostMapping
-    public AccountResponse createAccount(@RequestBody CreateAccountRequest request){
+    public AccountResponse createAccount(@Valid @RequestBody CreateAccountRequest request){
         Account account = accountService.createAccount(
                 request.getOwnerName(),
                 request.getBalance()
