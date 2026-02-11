@@ -1,8 +1,11 @@
 package org.wscict.bank.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class AccountResponse {
 
     private Long id;
+    @NotBlank(message = "Owner name must not be empty")
     private String ownerName;
     private double balance;
     private String status;

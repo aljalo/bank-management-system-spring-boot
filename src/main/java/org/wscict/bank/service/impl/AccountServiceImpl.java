@@ -27,7 +27,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountById(Long id){
 
-        return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+       // return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
+        return accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found with id: " + id));
     }
     @Override
     public List<Account> getAllAccounts(){
