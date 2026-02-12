@@ -4,15 +4,17 @@ import java.time.LocalDateTime;
 
 public class ErrorResponse {
 
-    private int status;
-    private String error;
-    private String message;
-    private String path;
-    private LocalDateTime timestamp;
+    private final int status;
+    private final String error;
+    private final String errorCode;
+    private final String message;
+    private final String path;
+    private final LocalDateTime timestamp;
 
-    public ErrorResponse(int status, String error, String message, String path){
+    public ErrorResponse(int status, String error,String errorCode , String message, String path){
         this.status = status;
         this.error = error;
+        this.errorCode = errorCode;
         this.message = message;
         this.path = path;
         this.timestamp = LocalDateTime.now();
@@ -24,6 +26,7 @@ public class ErrorResponse {
     public String getError(){
         return error;
     }
+    public String getErrorCode(){return errorCode;}
     public String getMessage(){
         return message;
     }
