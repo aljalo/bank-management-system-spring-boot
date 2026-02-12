@@ -1,11 +1,14 @@
 package org.wscict.bank.service;
 
+import org.wscict.bank.dto.AccountResponse;
+import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.model.Account;
 
 import java.util.List;
 
 public interface AccountService {
-    Account createAccount(String ownerName, double balance);
+    AccountResponse createAccount(CreateAccountRequest request);
+    //Account createAccount(String ownerName, double balance);
 
     Account getAccountById(Long id);
 

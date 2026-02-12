@@ -1,6 +1,7 @@
 package org.wscict.bank.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import org.wscict.bank.model.AccountStatus;
 
 public class AccountResponse {
 
@@ -8,13 +9,13 @@ public class AccountResponse {
     @NotBlank(message = "Owner name must not be empty")
     private String ownerName;
     private double balance;
-    private String status;
+    private AccountStatus accountStatus;
 
-    public AccountResponse(Long id, String ownerName, double balance, String status){
+    public AccountResponse(Long id, String ownerName, double balance, AccountStatus accountStatus) {
         this.id = id;
         this.ownerName = ownerName;
         this.balance = balance;
-        this.status = status;
+        this.accountStatus = accountStatus;
     }
 
     public Long getId(){
@@ -26,7 +27,10 @@ public class AccountResponse {
     public double getBalance(){
         return balance;
     }
-    public String getStatus(){
-        return status;
+    //public String getStatus(){
+    //    return status;
+    //}
+    public AccountStatus getAccountStatus(){
+        return accountStatus;
     }
 }

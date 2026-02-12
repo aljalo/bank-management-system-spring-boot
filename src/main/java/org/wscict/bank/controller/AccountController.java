@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.model.Account;
+import org.wscict.bank.payload.ApiResponse;
 import org.wscict.bank.service.AccountService;
 
 import java.util.List;
@@ -21,12 +22,10 @@ public class AccountController {
     }
 
    @PostMapping
-    public AccountResponse createAccount(@Valid @RequestBody CreateAccountRequest request){
-        Account account = accountService.createAccount(
-                request.getOwnerName(),
-                request.getBalance()
-        );
-        return mapToResponse(account);
+    public ApiResponse<AccountResponse> createAccount(@Valid @RequestBody CreateAccountRequest request){
+       AccountResponse response = accountService.createAccount(request);
+
+       return new ApiResponse<>(true, response);
    }
 
    @GetMapping("/{id}")
@@ -48,7 +47,8 @@ public class AccountController {
                 account.getId(),
                 account.getOwnerName(),
                 account.getBalance(),
-                account.getStatus()
+                //account.getStatus()
+                account.getAccountStatus()
         );
    }
 }
