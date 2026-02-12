@@ -11,15 +11,18 @@ public class Account {
 
     private String ownerName;
     private double balance;
-    private String status;
+    //private String status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus;
 
     public Account() {
     }
 
-    public Account(String ownerName, double balance, String status) {
+    public Account(String ownerName, double balance) {
         this.ownerName = ownerName;
         this.balance = balance;
-        this.status = status;
+       // this.status = status;
+        this.accountStatus = AccountStatus.ACTIVE;
     }
 
     //
@@ -46,11 +49,19 @@ public class Account {
     }
 
     //
-    public String getStatus() {
-        return status;
-    }
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
 
-    public void setStatus(String status) {
-        this.status = status;
+    //
+    public AccountStatus getAccountStatus() {
+        return accountStatus;
+    }
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
     }
 }

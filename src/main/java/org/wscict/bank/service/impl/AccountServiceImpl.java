@@ -1,8 +1,12 @@
 package org.wscict.bank.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.wscict.bank.dto.AccountResponse;
+import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.exception.AccountNotFoundException;
+import org.wscict.bank.exception.ResourceNotFoundException;
 import org.wscict.bank.model.Account;
+import org.wscict.bank.model.AccountStatus;
 import org.wscict.bank.repository.AccountRepository;
 import org.wscict.bank.service.AccountService;
 
@@ -20,15 +24,26 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account createAccount(String ownerName, double balance){
-        Account account = new Account(ownerName, balance , " ACTIVE");
-        return accountRepository.save(account);
+    public AccountResponse createAccount(CreateAccountRequest request){
+        Account account = new Account();
+        account.setOwnerName(request.getOwnerName());
+        account.setBalance(request.getBalance());
+        account.setAccountStatus(AccountStatus.ACTIVE);
+
+        Account savedAccount = accountRepository.save(account);
+
+        return new AccountResponse(
+                savedAccount.getId(),
+                savedAccount.getOwnerName(),
+                savedAccount.getBalance(),
+                savedAccount.getAccountStatus()
+        );
     }
     @Override
     public Account getAccountById(Long id){
 
        // return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        return accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found with id: " + id));
+        return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
     }
     @Override
     public List<Account> getAllAccounts(){
