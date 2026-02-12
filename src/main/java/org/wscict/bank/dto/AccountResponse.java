@@ -18,19 +18,22 @@ public class AccountResponse {
         this.accountStatus = accountStatus;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
-    public String getOwnerName(){
+
+    public String getOwnerName() {
         return ownerName;
     }
-    public double getBalance(){
+
+    public double getBalance() {
         return balance;
     }
+
     //public String getStatus(){
     //    return status;
     //}
-    public AccountStatus getAccountStatus(){
+    public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 }

@@ -11,7 +11,7 @@ public class ErrorResponse {
     private final String path;
     private final LocalDateTime timestamp;
 
-    public ErrorResponse(int status, String error,String errorCode , String message, String path){
+    public ErrorResponse(int status, String error, String errorCode, String message, String path) {
         this.status = status;
         this.error = error;
         this.errorCode = errorCode;
@@ -20,20 +20,27 @@ public class ErrorResponse {
         this.timestamp = LocalDateTime.now();
     }
 
-    public int getStatus(){
+    public int getStatus() {
         return status;
     }
-    public String getError(){
+
+    public String getError() {
         return error;
     }
-    public String getErrorCode(){return errorCode;}
-    public String getMessage(){
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
         return message;
     }
-    public String getPath(){
+
+    public String getPath() {
         return path;
     }
-    public LocalDateTime getTimestamp(){
+
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 }

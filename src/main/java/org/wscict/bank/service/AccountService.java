@@ -1,5 +1,7 @@
 package org.wscict.bank.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.model.Account;
@@ -13,4 +15,6 @@ public interface AccountService {
     Account getAccountById(Long id);
 
     List<Account> getAllAccounts();
+
+    Page<Account> getAllAccounts(Pageable pageable);
 }

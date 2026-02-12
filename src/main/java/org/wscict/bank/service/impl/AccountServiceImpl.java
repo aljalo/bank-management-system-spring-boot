@@ -1,5 +1,7 @@
 package org.wscict.bank.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
@@ -48,5 +50,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getAllAccounts(){
         return accountRepository.findAll();
+    }
+
+    @Override
+    public Page<Account> getAllAccounts(Pageable pageable){
+        return accountRepository.findAll(pageable);
     }
 }
