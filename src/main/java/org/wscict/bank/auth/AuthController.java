@@ -1,6 +1,5 @@
 package org.wscict.bank.auth;
 
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,20 +13,29 @@ import java.util.Set;
 public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+
 
     public AuthController(UserRepository userRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
-        User user = new User(
-                request.getUsername(),
-                passwordEncoder.encode(request.getPassword()),
-                Set.of("ROLE_USER")
-        );
+
+        Role userRole = roleRepository
+                .findByName("ROLE_USER")
+               .orElseThrow(() -> new RuntimeException("Role not found"));
+
+
+        User user = new User(request.getUsername(),
+                passwordEncoder.encode(request.getPassword()));
+
+        user.addRole(userRole);
+
         userRepository.save(user);
 
         return "User registered successfully";
