@@ -56,7 +56,7 @@ public class AccountController {
         );
     }
 
-    // ✅ Get Account By Id
+    // Get Account By Id
     @GetMapping("/{id}")
     public ApiResponse<AccountResponse> getAccountById(@PathVariable Long id) {
 

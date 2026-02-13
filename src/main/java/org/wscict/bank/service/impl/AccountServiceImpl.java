@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
-import org.wscict.bank.exception.AccountNotFoundException;
 import org.wscict.bank.exception.ResourceNotFoundException;
 import org.wscict.bank.mapper.AccountMapper;
 import org.wscict.bank.model.Account;
@@ -17,7 +16,6 @@ import org.wscict.bank.service.AccountService;
 
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -48,20 +46,6 @@ public class AccountServiceImpl implements AccountService {
 
         return accountMapper.toResponse(saved);
 
-
-//        Account account = new Account();
-//        account.setOwnerName(request.getOwnerName());
-//        account.setBalance(request.getBalance());
-//        account.setAccountStatus(AccountStatus.ACTIVE);
-//
-//        Account savedAccount = accountRepository.save(account);
-//
-//        return new AccountResponse(
-//                savedAccount.getId(),
-//                savedAccount.getOwnerName(),
-//                savedAccount.getBalance(),
-//                savedAccount.getAccountStatus()
-//        );
     }
     @Override
     public Account getAccountById(Long id){

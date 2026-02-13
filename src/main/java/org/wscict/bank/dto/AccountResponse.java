@@ -30,9 +30,6 @@ public class AccountResponse {
         return balance;
     }
 
-    //public String getStatus(){
-    //    return status;
-    //}
     public AccountStatus getAccountStatus() {
         return accountStatus;
     }
