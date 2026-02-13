@@ -1,5 +1,7 @@
 package org.wscict.bank.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.exception.AccountNotFoundException;
 import org.wscict.bank.exception.ResourceNotFoundException;
+import org.wscict.bank.mapper.AccountMapper;
 import org.wscict.bank.model.Account;
 import org.wscict.bank.model.AccountStatus;
 import org.wscict.bank.repository.AccountRepository;
@@ -19,27 +22,46 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private final AccountRepository accountRepository;
+    private static final Logger log =
+    LoggerFactory.getLogger(AccountServiceImpl.class);
 
-    public AccountServiceImpl(AccountRepository accountRepository){
+    private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
+
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              AccountMapper accountMapper
+                              ){
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
     }
 
     @Override
     public AccountResponse createAccount(CreateAccountRequest request){
-        Account account = new Account();
-        account.setOwnerName(request.getOwnerName());
-        account.setBalance(request.getBalance());
+        log.info("Create account for owner: {}", request.getOwnerName());
+
+        Account account = accountMapper.toEntity(request);
         account.setAccountStatus(AccountStatus.ACTIVE);
 
-        Account savedAccount = accountRepository.save(account);
+        Account saved =  accountRepository.save(account);
 
-        return new AccountResponse(
-                savedAccount.getId(),
-                savedAccount.getOwnerName(),
-                savedAccount.getBalance(),
-                savedAccount.getAccountStatus()
-        );
+        log.info("account created successfully: {}", saved.getId());
+
+        return accountMapper.toResponse(saved);
+
+
+//        Account account = new Account();
+//        account.setOwnerName(request.getOwnerName());
+//        account.setBalance(request.getBalance());
+//        account.setAccountStatus(AccountStatus.ACTIVE);
+//
+//        Account savedAccount = accountRepository.save(account);
+//
+//        return new AccountResponse(
+//                savedAccount.getId(),
+//                savedAccount.getOwnerName(),
+//                savedAccount.getBalance(),
+//                savedAccount.getAccountStatus()
+//        );
     }
     @Override
     public Account getAccountById(Long id){
