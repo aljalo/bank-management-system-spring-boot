@@ -34,11 +34,7 @@ public class AccountController {
 
     // Get All Accounts (Pagination)
     @GetMapping
-    public PaginationResponse<AccountResponse> getAllAccounts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
+    public PaginationResponse<AccountResponse> getAllAccounts(Pageable pageable) {
 
         Page<Account> accountPage = accountService.getAllAccounts(pageable);
 
