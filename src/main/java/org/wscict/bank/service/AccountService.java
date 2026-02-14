@@ -12,6 +12,8 @@ public interface AccountService {
     AccountResponse createAccount(CreateAccountRequest request);
     //Account createAccount(String ownerName, double balance);
 
+    long countAccounts();
+
     Account getAccountById(Long id);
 
     List<Account> getAllAccounts();

@@ -24,29 +24,31 @@ public class AccountServiceImpl implements AccountService {
     LoggerFactory.getLogger(AccountServiceImpl.class);
 
     private final AccountRepository accountRepository;
-    private final AccountMapper accountMapper;
 
     public AccountServiceImpl(AccountRepository accountRepository,
                               AccountMapper accountMapper
                               ){
         this.accountRepository = accountRepository;
-        this.accountMapper = accountMapper;
     }
 
     @Override
-    public AccountResponse createAccount(CreateAccountRequest request){
-        log.info("Create account for owner: {}", request.getOwnerName());
+    public AccountResponse createAccount(CreateAccountRequest request) {
 
-        Account account = accountMapper.toEntity(request);
+        Account account = new Account();
+        account.setOwnerName(request.getOwnerName());
+        account.setBalance(request.getBalance());
         account.setAccountStatus(AccountStatus.ACTIVE);
 
-        Account saved =  accountRepository.save(account);
+        Account saved = accountRepository.save(account);
 
-        log.info("account created successfully: {}", saved.getId());
-
-        return accountMapper.toResponse(saved);
-
+        return new AccountResponse(
+                saved.getId(),
+                saved.getOwnerName(),
+                saved.getBalance(),
+                saved.getAccountStatus()
+        );
     }
+
     @Override
     public Account getAccountById(Long id){
 
@@ -61,5 +63,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Page<Account> getAllAccounts(Pageable pageable){
         return accountRepository.findAll(pageable);
+    }
+
+    @Override
+    public long countAccounts(){
+        return accountRepository.count();
     }
 }
