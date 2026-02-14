@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
         log.warn("Validation Failed: {}", message);
 
         return new ErrorResponse(
-                400,
+
+                HttpStatus.BAD_REQUEST.value(),
                 "Validation Failed",
                 "BANK_VALIDATION",
                 message,
