@@ -4,7 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
+import org.wscict.bank.payload.ApiResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,49 +23,46 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ============================
-    // Register new user
-    // ============================
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterRequest request) {
 
-        //
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ApiResponse<>(false, null, "Username already exists"));
+        }
+
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
 
-        //
-        User user = new User(request.getUsername(), passwordEncoder.encode(request.getPassword()));
-
-        //
+        User user = new User(request.getUsername(),
+                passwordEncoder.encode(request.getPassword()));
         user.addRole(userRole);
 
-        //
         userRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok(new ApiResponse<>(true, null, "User registered successfully"));
     }
 
-    // ============================
-    // Promote User to Admin
-    // ============================
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/promote/{username}")
-    public ResponseEntity<String> promoteToAdmin(@PathVariable String username) {
+    public ResponseEntity<ApiResponse<Void>> promoteToAdmin(@PathVariable String username) {
 
-        //
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        //
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new RuntimeException("ROLE_ADMIN not found"));
 
-        //
+        if (user.getRoles().contains(adminRole)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ApiResponse<>(false, null, "User is already an admin"));
+        }
+
         user.addRole(adminRole);
-
-       //
         userRepository.save(user);
 
-        return ResponseEntity.ok("User promoted to ADMIN successfully");
+        return ResponseEntity.ok(new ApiResponse<>(true, null, "User promoted to ADMIN successfully"));
     }
 }
