@@ -23,16 +23,16 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    // ✅ Create Account
+    // Create Account
     @PostMapping
     public ApiResponse<AccountResponse> createAccount(
             @Valid @RequestBody CreateAccountRequest request) {
 
         AccountResponse response = accountService.createAccount(request);
-        return new ApiResponse<>(true, response);
+        return new ApiResponse<>(true, response, "Account created successfully");
     }
 
-    // ✅ Get All Accounts (Pagination)
+    // Get All Accounts (Pagination)
     @GetMapping
     public PaginationResponse<AccountResponse> getAllAccounts(
             @RequestParam(defaultValue = "0") int page,
@@ -61,10 +61,10 @@ public class AccountController {
     public ApiResponse<AccountResponse> getAccountById(@PathVariable Long id) {
 
         Account account = accountService.getAccountById(id);
-        return new ApiResponse<>(true, mapToResponse(account));
+        return new ApiResponse<>(true, mapToResponse(account), "Account fetch successfully");
     }
 
-    // 🔹 Private Mapper
+    // Private Mapper
     private AccountResponse mapToResponse(Account account) {
         return new AccountResponse(
                 account.getId(),
