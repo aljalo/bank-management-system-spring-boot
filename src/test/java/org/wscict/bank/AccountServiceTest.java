@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.exception.ResourceNotFoundException;
 import org.wscict.bank.model.Account;
 import org.wscict.bank.repository.AccountRepository;
@@ -57,7 +58,7 @@ class AccountServiceTest {
         // Act
         // ======================
 
-        Account result = accountService.getAccountById(id);
+        AccountResponse result = accountService.getAccountById(id);
 
         // ======================
         // Assert

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
 import org.wscict.bank.exception.ResourceNotFoundException;
-import org.wscict.bank.mapper.AccountMapper;
 import org.wscict.bank.model.Account;
 import org.wscict.bank.model.AccountStatus;
 import org.wscict.bank.repository.AccountRepository;
@@ -16,23 +15,22 @@ import org.wscict.bank.service.AccountService;
 
 import java.util.List;
 
-
 @Service
 public class AccountServiceImpl implements AccountService {
 
     private static final Logger log =
-    LoggerFactory.getLogger(AccountServiceImpl.class);
+            LoggerFactory.getLogger(AccountServiceImpl.class);
 
     private final AccountRepository accountRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository,
-                              AccountMapper accountMapper
-                              ){
+    public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     @Override
     public AccountResponse createAccount(CreateAccountRequest request) {
+
+        log.info("Creating account for owner: {}", request.getOwnerName());
 
         Account account = new Account();
         account.setOwnerName(request.getOwnerName());
@@ -41,32 +39,49 @@ public class AccountServiceImpl implements AccountService {
 
         Account saved = accountRepository.save(account);
 
-        return new AccountResponse(
-                saved.getId(),
-                saved.getOwnerName(),
-                saved.getBalance(),
-                saved.getAccountStatus()
-        );
+        log.info("Account created successfully with ID: {}", saved.getId());
+
+        return mapToResponse(saved);
     }
 
     @Override
-    public Account getAccountById(Long id){
+    public AccountResponse getAccountById(Long id) {
 
-       // return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
-    }
-    @Override
-    public List<Account> getAllAccounts(){
-        return accountRepository.findAll();
-    }
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Account not found with id: " + id));
 
-    @Override
-    public Page<Account> getAllAccounts(Pageable pageable){
-        return accountRepository.findAll(pageable);
+        return mapToResponse(account);
     }
 
     @Override
-    public long countAccounts(){
+    public List<AccountResponse> getAllAccounts() {
+
+        return accountRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public Page<AccountResponse> getAllAccounts(Pageable pageable) {
+
+        return accountRepository.findAll(pageable)
+                .map(this::mapToResponse);
+    }
+
+    @Override
+    public long countAccounts() {
         return accountRepository.count();
+    }
+
+    // 🔥 Private Mapper Method
+    private AccountResponse mapToResponse(Account account) {
+        return new AccountResponse(
+                account.getId(),
+                account.getOwnerName(),
+                account.getBalance(),
+                account.getAccountStatus()
+        );
     }
 }

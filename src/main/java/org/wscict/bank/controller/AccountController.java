@@ -2,16 +2,13 @@ package org.wscict.bank.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
-import org.wscict.bank.model.Account;
 import org.wscict.bank.payload.ApiResponse;
 import org.wscict.bank.payload.PaginationResponse;
 import org.wscict.bank.service.AccountService;
-
 
 @RestController
 @RequestMapping("/accounts")
@@ -23,50 +20,39 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    // Create Account
     @PostMapping
     public ApiResponse<AccountResponse> createAccount(
             @Valid @RequestBody CreateAccountRequest request) {
 
-        AccountResponse response = accountService.createAccount(request);
-        return new ApiResponse<>(true, response, "Account created successfully");
-    }
-
-    // Get All Accounts (Pagination)
-    @GetMapping
-    public PaginationResponse<AccountResponse> getAllAccounts(Pageable pageable) {
-
-        Page<Account> accountPage = accountService.getAllAccounts(pageable);
-
-        var accounts = accountPage.getContent().stream()
-                .map(this::mapToResponse)
-                .toList();
-
-        return new PaginationResponse<>(
+        return new ApiResponse<>(
                 true,
-                accounts,
-                accountPage.getNumber(),
-                accountPage.getSize(),
-                accountPage.getTotalElements(),
-                accountPage.getTotalPages()
+                accountService.createAccount(request),
+                "Account created successfully"
         );
     }
 
-    // Get Account By Id
     @GetMapping("/{id}")
     public ApiResponse<AccountResponse> getAccountById(@PathVariable Long id) {
 
-        Account account = accountService.getAccountById(id);
-        return new ApiResponse<>(true, mapToResponse(account), "Account fetch successfully");
+        return new ApiResponse<>(
+                true,
+                accountService.getAccountById(id),
+                "Account fetched successfully"
+        );
     }
 
-    // Private Mapper
-    private AccountResponse mapToResponse(Account account) {
-        return new AccountResponse(
-                account.getId(),
-                account.getOwnerName(),
-                account.getBalance(),
-                account.getAccountStatus()
+    @GetMapping
+    public PaginationResponse<AccountResponse> getAllAccounts(Pageable pageable) {
+
+        Page<AccountResponse> page = accountService.getAllAccounts(pageable);
+
+        return new PaginationResponse<>(
+                true,
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
         );
     }
 }

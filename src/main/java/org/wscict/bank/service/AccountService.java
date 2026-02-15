@@ -4,19 +4,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.wscict.bank.dto.AccountResponse;
 import org.wscict.bank.dto.CreateAccountRequest;
-import org.wscict.bank.model.Account;
 
 import java.util.List;
 
 public interface AccountService {
+
     AccountResponse createAccount(CreateAccountRequest request);
-    //Account createAccount(String ownerName, double balance);
+
+    AccountResponse getAccountById(Long id);
+
+    List<AccountResponse> getAllAccounts();
+
+    Page<AccountResponse> getAllAccounts(Pageable pageable);
 
     long countAccounts();
-
-    Account getAccountById(Long id);
-
-    List<Account> getAllAccounts();
-
-    Page<Account> getAllAccounts(Pageable pageable);
 }
