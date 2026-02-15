@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.count();
     }
 
-    // 🔥 Private Mapper Method
+    // Private Mapper Method
     private AccountResponse mapToResponse(Account account) {
         return new AccountResponse(
                 account.getId(),
